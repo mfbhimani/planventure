@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone
+from utils import hash_password, verify_password
 
 db = SQLAlchemy()
 
@@ -21,6 +22,27 @@ class User(BaseModel):
     
     def __repr__(self):
         return f'<User {self.email}>'
+    
+    def set_password(self, password: str) -> None:
+        """
+        Hash and set the user's password.
+        
+        Args:
+            password: Plain text password to hash and store
+        """
+        self.password_hash = hash_password(password)
+    
+    def check_password(self, password: str) -> bool:
+        """
+        Verify a password against the stored hash.
+        
+        Args:
+            password: Plain text password to verify
+            
+        Returns:
+            True if password matches, False otherwise
+        """
+        return verify_password(self.password_hash, password)
     
     def to_dict(self):
         return {

@@ -59,11 +59,8 @@ def create_test_data():
         # Add a test user if needed
         existing_user = User.query.filter_by(email="test@example.com").first()
         if not existing_user:
-            from werkzeug.security import generate_password_hash
-            test_user = User(
-                email="test@example.com",
-                password_hash=generate_password_hash("password123")
-            )
+            test_user = User(email="test@example.com")
+            test_user.set_password("password123")
             db.session.add(test_user)
             print("Added test User.")
         else:
